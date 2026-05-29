@@ -1,0 +1,27 @@
+.venv/
+__pycache__/
+*.py[cod]
+.DS_Store
+*.egg-info/
+*.egg-info/
+dist/
+build/
+
+# Model artifacts (large)
+models/gguf/
+models/mlx/
+models/hub/
+outputs/
+projects/*/outputs/
+*.gguf
+*.safetensors
+*.bin
+*.npz
+
+# unsloth-buddy project runtime
+projects/*/.gaslamp_context/
+
+# IDE
+.idea/
+.vscode/
+.cursor/

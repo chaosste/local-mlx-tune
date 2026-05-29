@@ -1,0 +1,25 @@
+[project]
+name = "local-mlx-tune"
+version = "0.1.0"
+description = "Unambitious local LoRA fine-tuning on Apple Silicon: GGUF → MLX → mlx-tune"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "mlx",
+    "mlx-lm[train]",
+    "mlx-tune",
+    "datasets",
+    "pyyaml",
+]
+
+[project.optional-dependencies]
+gguf = [
+    "gguf2mlx @ git+https://github.com/barrontang/gguf2mlx.git",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = []
