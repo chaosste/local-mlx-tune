@@ -1,0 +1,33 @@
+# ~30 minute SFT on M1 8GB (calibrated from 100-step run ≈ 90s core training)
+# Model catalog: configs/models.md
+#
+# IMPORTANT: With only 3 rows in data/train.jsonl this run will MEMORIZE, not
+# generalize. Add 50–200+ chat examples to data/train.jsonl before a quality run.
+# See configs/sft_30min.yaml notes in README / run script.
+
+model: models/mlx/gemma3-1b-heretic-4bit
+
+max_seq_length: 1024
+load_in_4bit: true
+
+lora:
+  r: 8
+  lora_alpha: 8
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+
+data:
+  train_file: data/train.jsonl
+
+training:
+  # ~1650 steps × ~1.0 s/step ≈ 28 min training + checkpoints/eval ≈ 30 min total
+  output_dir: outputs/runs/gemma3-30min
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 4
+  learning_rate: 1.5e-4
+  max_steps: 1650
+  logging_steps: 10
+  save_steps: 300
