@@ -14,6 +14,20 @@ Unambitious local LoRA fine-tuning on Apple Silicon: uncensored GGUF → MLX →
 | [mlx-tune](https://github.com/ARahim3/mlx-tune) | Unsloth-compatible SFT/DPO/GRPO on MLX |
 | [unsloth-buddy](https://github.com/TYH-labs/unsloth-buddy) | Optional agent orchestrator (`.agents/skills/`) |
 
+Default model and catalog: [`configs/models.md`](configs/models.md) · config [`configs/sft_unambitious.yaml`](configs/sft_unambitious.yaml)
+
+**Unattended first run** (download → convert → smoke → 100-step LoRA):
+
+```bash
+source .venv/bin/activate
+chmod +x scripts/run_bootstrap_gemma3.sh
+./scripts/run_bootstrap_gemma3.sh
+# in another terminal:
+tail -f logs/bootstrap-gemma3.log
+```
+
+Shorter test while away: `TRAIN_STEPS=25 ./scripts/run_bootstrap_gemma3.sh`
+
 ## Setup
 
 ```bash
