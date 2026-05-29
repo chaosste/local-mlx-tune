@@ -59,19 +59,24 @@ def main() -> int:
     output_dir = ROOT / train_cfg["output_dir"]
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    sft_args = {
+        "output_dir": str(output_dir),
+        "per_device_train_batch_size": train_cfg["per_device_train_batch_size"],
+        "gradient_accumulation_steps": train_cfg["gradient_accumulation_steps"],
+        "learning_rate": train_cfg["learning_rate"],
+        "max_steps": max_steps,
+        "logging_steps": train_cfg["logging_steps"],
+        "save_steps": train_cfg["save_steps"],
+    }
+    for key in ("grad_checkpoint", "val_batches", "steps_per_eval"):
+        if key in train_cfg:
+            sft_args[key] = train_cfg[key]
+
     trainer = SFTTrainer(
         model=model,
         tokenizer=tokenizer,
         train_dataset=dataset,
-        args=SFTConfig(
-            output_dir=str(output_dir),
-            per_device_train_batch_size=train_cfg["per_device_train_batch_size"],
-            gradient_accumulation_steps=train_cfg["gradient_accumulation_steps"],
-            learning_rate=train_cfg["learning_rate"],
-            max_steps=max_steps,
-            logging_steps=train_cfg["logging_steps"],
-            save_steps=train_cfg["save_steps"],
-        ),
+        args=SFTConfig(**sft_args),
     )
     trainer.train()
     model.save_pretrained(str(output_dir))

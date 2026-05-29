@@ -21,6 +21,10 @@ projects/*/outputs/
 # unsloth-buddy project runtime
 projects/*/.gaslamp_context/
 
+# Training runtime
+logs/
+data/valid.jsonl
+
 # IDE
 .idea/
 .vscode/
