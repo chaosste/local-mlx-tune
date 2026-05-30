@@ -3,8 +3,11 @@
 #
 #   cd ~/Projects/local-mlx-tune && source .venv/bin/activate
 #   ./scripts/run_train_500.sh
+#   # or overnight wrapper (caffeinate on by default):
+#   ./scripts/run_train_overnight.sh
 #
 # Monitor: tail -f logs/train-500.log
+# Opt out of caffeinate: CAFFEINATE=0 ./scripts/run_train_500.sh
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -34,7 +37,12 @@ echo "Log:    $LOG"
 
 source .venv/bin/activate
 
-python scripts/03_train_sft.py --config "$CONFIG"
+if [[ "${CAFFEINATE:-1}" == "1" ]]; then
+  echo "caffeinate: idle sleep blocked for training"
+  caffeinate -i python scripts/03_train_sft.py --config "$CONFIG"
+else
+  python scripts/03_train_sft.py --config "$CONFIG"
+fi
 
 echo "--- post-train eval (base vs adapter) ---"
 python scripts/04_eval_compare.py \

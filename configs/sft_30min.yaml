@@ -1,4 +1,4 @@
-# ~30 minute SFT on M1 8GB — data/train.jsonl (31 femtheogenic Q&A pairs)
+# ~30 minute SFT on M1 8GB — data/train.jsonl (66 rows after WHAT_IS merge)
 
 model: models/mlx/gemma3-1b-heretic-4bit
 
@@ -19,10 +19,13 @@ data:
 
 training:
   # ~1650 steps × ~1.0 s/step ≈ 28 min training + checkpoints/eval ≈ 30 min total
-  output_dir: outputs/runs/gemma3-30min
+  output_dir: outputs/runs/gemma3-30min-whatis
   per_device_train_batch_size: 1
   gradient_accumulation_steps: 4
   learning_rate: 1.5e-4
   max_steps: 1650
   logging_steps: 10
-  save_steps: 300
+  save_steps: 50
+  grad_checkpoint: true
+  val_batches: 0
+  steps_per_eval: 1650

@@ -5,6 +5,8 @@
 #   ./scripts/run_train_30min.sh
 #
 # Monitor: tail -f logs/train-30min.log
+# Fallback (save every 50, resume): ./scripts/run_train_30min_lora.sh
+# Metal ImpactingInteractivity: close heavy GPU apps; run from Terminal.app when idle.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -13,7 +15,7 @@ cd "$ROOT"
 LOG="logs/train-30min.log"
 CONFIG="configs/sft_30min.yaml"
 MODEL="models/mlx/gemma3-1b-heretic-4bit"
-OUT="outputs/runs/gemma3-30min"
+OUT="outputs/runs/gemma3-30min-whatis"
 
 mkdir -p logs outputs/runs
 
@@ -39,7 +41,12 @@ echo "Log:    $LOG"
 
 source .venv/bin/activate
 
-python scripts/03_train_sft.py --config "$CONFIG"
+if [[ "${CAFFEINATE:-1}" == "1" ]]; then
+  echo "caffeinate: idle sleep blocked for training"
+  caffeinate -i python scripts/03_train_sft.py --config "$CONFIG"
+else
+  python scripts/03_train_sft.py --config "$CONFIG"
+fi
 
 echo "--- post-train eval (base vs adapter) ---"
 python scripts/04_eval_compare.py \
@@ -48,4 +55,4 @@ python scripts/04_eval_compare.py \
 
 echo "=== 30-min train finished $(date) ==="
 echo "Adapters: $OUT"
-echo "Merge:    MODEL=$MODEL ADAPTER_PATH=$OUT MERGED=outputs/runs/gemma3-30min-merged ./scripts/05_export.sh"
+echo "Merge:    MODEL=$MODEL ADAPTER_PATH=$OUT MERGED=outputs/runs/gemma3-30min-whatis-merged ./scripts/05_export.sh"
