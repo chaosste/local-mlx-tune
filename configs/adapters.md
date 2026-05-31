@@ -23,7 +23,7 @@ mlx_lm.chat --model models/mlx/gemma3-1b-heretic-4bit \
   --adapter-path outputs/runs/gemma3-discourse
 ```
 
-Compare:
+Compare (after `source .venv/bin/activate`):
 
 ```bash
 python scripts/04_eval_dual_adapters.py
