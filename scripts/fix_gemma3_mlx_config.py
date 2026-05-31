@@ -10,25 +10,6 @@ from pathlib import Path
 
 
 def fix_config(config: dict) -> dict:
-    text_keys = {
-        "hidden_size",
-        "intermediate_size",
-        "num_hidden_layers",
-        "num_attention_heads",
-        "num_key_value_heads",
-        "max_position_embeddings",
-        "rms_norm_eps",
-        "rope_theta",
-        "vocab_size",
-        "attention_bias",
-        "head_dim",
-        "query_pre_attn_scalar",
-        "sliding_window",
-        "sliding_window_pattern",
-        "rope_local_base_freq",
-        "hidden_activation",
-        "rope_scaling",
-    }
     out = dict(config)
     out["model_type"] = "gemma3_text"
     out.setdefault("head_dim", 256)

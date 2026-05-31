@@ -30,7 +30,7 @@ def main() -> int:
 
     cfg = load_config(args.config)
     model_path = args.model or cfg["model"]
-    max_steps = args.max_steps or cfg["training"]["max_steps"]
+    max_steps = args.max_steps if args.max_steps is not None else cfg["training"]["max_steps"]
     lora = cfg["lora"]
     train_cfg = cfg["training"]
 
