@@ -42,6 +42,15 @@ python scripts/00_check_env.py
 
 Verify native ARM: `python -c "import platform; print(platform.processor())"` → `arm`.
 
+Same repo everywhere: `git pull` for code. `models/` and `outputs/` are gitignored — rsync only when a checkout is missing them:
+
+```bash
+rsync -av ~/Projects/local-mlx-tune/models/mlx/ REMOTE:~/Projects/local-mlx-tune/models/mlx/
+rsync -av ~/Projects/local-mlx-tune/outputs/ REMOTE:~/Projects/local-mlx-tune/outputs/
+```
+
+Replace `REMOTE` with `user@host` (or an SSH config host alias).
+
 ## Model size guide (M1 8 GB)
 
 | Size | GGUF convert | QLoRA train | Notes |
@@ -93,6 +102,14 @@ python scripts/03_train_sft.py
 python scripts/03_train_sft.py --model mlx-community/Llama-3.2-1B-Instruct-4bit --max-steps 50
 ```
 
+**Glossary LoRA** (separate adapter, `data/glossary.jsonl`):
+
+```bash
+source .venv/bin/activate
+./scripts/run_train_glossary.sh
+tail -f logs/train-glossary.log
+```
+
 **mlx-lm CLI fallback** (smallest footprint):
 
 ```bash
@@ -104,9 +121,12 @@ mlx_lm.lora --model models/mlx/my-uncensored-base-4bit \
 ### 4. Evaluate
 
 ```bash
-python scripts/04_eval_compare.py --model models/mlx/my-uncensored-base-4bit
-mlx_lm.chat --model models/mlx/my-uncensored-base-4bit --adapter-path outputs/adapters
+source .venv/bin/activate
+mlx_lm.chat --model models/mlx/gemma3-1b-heretic-4bit --adapter-path outputs/runs/gemma3-glossary
+python scripts/04_eval_dual_adapters.py
 ```
+
+See [`configs/adapters.md`](configs/adapters.md) for discourse vs glossary paths.
 
 ### 5. Export
 

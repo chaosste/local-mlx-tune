@@ -64,13 +64,6 @@ else
   "${LORA_CMD[@]}"
 fi
 
-echo "--- compare vs discourse adapter ---"
-python scripts/04_eval_dual_adapters.py \
-  --adapter-a "$OUT" \
-  --label-a glossary \
-  --adapter-b outputs/runs/gemma3-discourse \
-  --label-b discourse \
-  --max-tokens 200 || true
-
 echo "=== glossary train finished $(date) ==="
-echo "Chat: mlx_lm.chat --model $MODEL --adapter-path $OUT"
+echo "Chat:  mlx_lm.chat --model $MODEL --adapter-path $OUT"
+echo "Eval:  python scripts/04_eval_dual_adapters.py"
