@@ -16,7 +16,7 @@ cd "$ROOT"
 LOG="logs/train-500.log"
 CONFIG="configs/sft_500steps.yaml"
 MODEL="models/mlx/gemma3-1b-heretic-4bit"
-OUT="outputs/runs/gemma3-500-2048"
+OUT="outputs/runs/gemma3-discourse"
 
 mkdir -p logs outputs/runs
 
@@ -51,4 +51,4 @@ python scripts/04_eval_compare.py \
 
 echo "=== 500-step train finished $(date) ==="
 echo "Adapters: $OUT"
-echo "Merge:    MODEL=$MODEL ADAPTER_PATH=$OUT MERGED=outputs/runs/gemma3-500-2048-merged ./scripts/05_export.sh"
+echo "Merge:    MODEL=$MODEL ADAPTER_PATH=$OUT MERGED=outputs/runs/gemma3-discourse-merged ./scripts/05_export.sh"
