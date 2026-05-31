@@ -12,7 +12,7 @@ cd "$ROOT"
 
 LOG="logs/train-500-lora.log"
 MODEL="models/mlx/gemma3-1b-heretic-4bit"
-OUT="outputs/runs/gemma3-500-2048-lora"
+OUT="outputs/runs/gemma3-discourse-lora"
 DATA="data"
 
 mkdir -p logs "$OUT"
