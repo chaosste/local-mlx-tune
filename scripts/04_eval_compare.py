@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import gc
 import sys
 from pathlib import Path
 
@@ -44,22 +45,27 @@ def main() -> int:
     adapter_path = Path(args.adapter_path)
 
     print(f"Base model: {args.model}\n")
-    base_model, tokenizer = load(args.model)
-
     if adapter_path.exists():
         print(f"Adapter:   {adapter_path}\n")
-        tuned_model, _ = load(args.model, adapter_path=str(adapter_path))
     else:
         print(f"Adapter:   {adapter_path} (missing — showing base only)\n")
-        tuned_model = None
 
+    base_model, tokenizer = load(args.model)
     for i, prompt in enumerate(prompts, 1):
         print(f"--- Prompt {i} ---")
         print(f"Q: {prompt}\n")
         print(f"[Base]       {generate(base_model, tokenizer, prompt, args.max_tokens)}")
-        if tuned_model is not None:
-            print(f"[Fine-tuned] {generate(tuned_model, tokenizer, prompt, args.max_tokens)}")
         print()
+    del base_model
+    gc.collect()
+
+    if adapter_path.exists():
+        tuned_model, tokenizer = load(args.model, adapter_path=str(adapter_path))
+        for i, prompt in enumerate(prompts, 1):
+            print(f"--- Prompt {i} (Fine-tuned) ---")
+            print(f"Q: {prompt}\n")
+            print(f"[Fine-tuned] {generate(tuned_model, tokenizer, prompt, args.max_tokens)}")
+            print()
 
     return 0
 

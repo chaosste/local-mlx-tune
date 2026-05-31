@@ -16,7 +16,12 @@ def normalize_question(text: str) -> str:
     t = text.strip().lower()
     t = re.sub(r"^q:\s*", "", t)
     t = re.sub(r"^a:\s*", "", t)
-    t = t.replace("'", "'").replace("'", "'").replace(""", '"').replace(""", '"')
+    t = (
+        t.replace("\u2018", "'")
+        .replace("\u2019", "'")
+        .replace("\u201c", '"')
+        .replace("\u201d", '"')
+    )
     t = re.sub(r"['\"`]", "", t)
     t = re.sub(r"\s+", " ", t)
     return t.rstrip("?").strip()
