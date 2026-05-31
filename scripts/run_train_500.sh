@@ -1,21 +1,22 @@
 #!/usr/bin/env bash
-# 30-minute LoRA run — invoke when Stephen says go.
+# ~500-step LoRA run — max_seq_length 2048, 53-row train.jsonl
 #
 #   cd ~/Projects/local-mlx-tune && source .venv/bin/activate
-#   ./scripts/run_train_30min.sh
+#   ./scripts/run_train_500.sh
+#   # or overnight wrapper (caffeinate on by default):
+#   ./scripts/run_train_overnight.sh
 #
-# Monitor: tail -f logs/train-30min.log
-# Fallback (save every 50, resume): ./scripts/run_train_30min_lora.sh
-# Metal ImpactingInteractivity: close heavy GPU apps; run from Terminal.app when idle.
+# Monitor: tail -f logs/train-500.log
+# Opt out of caffeinate: CAFFEINATE=0 ./scripts/run_train_500.sh
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-LOG="logs/train-30min.log"
-CONFIG="configs/sft_30min.yaml"
+LOG="logs/train-500.log"
+CONFIG="configs/sft_500steps.yaml"
 MODEL="models/mlx/gemma3-1b-heretic-4bit"
-OUT="outputs/runs/gemma3-30min-whatis"
+OUT="outputs/runs/gemma3-discourse"
 
 mkdir -p logs outputs/runs
 
@@ -26,15 +27,10 @@ if [[ ! -f "$MODEL/config.json" ]]; then
 fi
 
 ROWS=$(wc -l < data/train.jsonl | tr -d ' ')
-if [[ "$ROWS" -lt 20 ]]; then
-  echo "WARNING: data/train.jsonl has only ${ROWS} rows."
-  echo "  A 30-minute run will overfit. Add 50–200+ examples for a real fine-tune."
-  echo "  Proceeding in 5s — Ctrl-C to abort..."
-  sleep 5
-fi
+echo "Training rows: ${ROWS}"
 
 exec > >(tee -a "$LOG") 2>&1
-echo "=== 30-min train started $(date) ==="
+echo "=== 500-step train started $(date) ==="
 echo "Config: $CONFIG"
 echo "Output: $OUT"
 echo "Log:    $LOG"
@@ -53,6 +49,6 @@ python scripts/04_eval_compare.py \
   --model "$MODEL" \
   --adapter-path "$OUT"
 
-echo "=== 30-min train finished $(date) ==="
+echo "=== 500-step train finished $(date) ==="
 echo "Adapters: $OUT"
-echo "Merge:    MODEL=$MODEL ADAPTER_PATH=$OUT MERGED=outputs/runs/gemma3-30min-whatis-merged ./scripts/05_export.sh"
+echo "Merge:    MODEL=$MODEL ADAPTER_PATH=$OUT MERGED=outputs/runs/gemma3-discourse-merged ./scripts/05_export.sh"
