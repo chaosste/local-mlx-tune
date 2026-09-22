@@ -8,6 +8,8 @@ Local MLX fine-tuning workflow for Apple Silicon Macs. The repo is set up around
 
 **Longer “discourse” runs:** Training on the fuller data/train.jsonl set with longer answers and more conversational or interpretive prompts. These runs use more steps and often a larger context length, aiming to shape the model’s response style and reasoning over richer material rather than just short glossary answers.
 
+**50-200+ total examples across both discourse and glossary items** is a practical minimum for a useful small fine-tune here. If you want both behaviors to stick well, aim for a mixed dataset with enough coverage of each rather than 50-200 of each separately.
+
 ## What’s in the repo
 
 - `configs/` — training presets for short, 500-step, glossary-only, and unambitious runs
