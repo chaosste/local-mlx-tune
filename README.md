@@ -185,3 +185,15 @@ Here’s the short version:
 - `scripts/fix_gemma3_mlx_config.py` patches Gemma 3 MLX configs when conversion output needs cleanup.
 - Training wrappers use `caffeinate` by default so the machine stays awake during long runs.
 - Generated artifacts live under `models/`, `outputs/`, and `logs/`, and are ignored by git.
+
+## Useful links
+
+[MLX finetuning:](https://apeatling.com/articles/part-3-fine-tuning-your-llm-using-the-mlx-framework/)
+
+[LLM Eval](https://github.com/ml-explore/mlx-swift-examples/blob/main/Applications/LLMEval/README.md)
+
+[MLX-example:](https://github.com/Y4hL/mlx-examples/tree/main)  
+
+[mlx-rag-gguf:](https://github.com/Jaykef/mlx-rag-gguf)
+
+[mlx-utils:](https://github.com/ml-explore/mlx-examples/blob/a7598e9456c6455a07ff4905712c2ea3cfcd52db/llms/mlx_lm/tuner/utils.py#L86) 
